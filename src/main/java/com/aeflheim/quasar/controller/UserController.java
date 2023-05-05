@@ -8,7 +8,7 @@ import com.aeflheim.quasar.dto.UserDto;
 import com.aeflheim.quasar.service.QsUserDetailsService;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/accounts")
 public class UserController {
 
     private QsUserDetailsService userDetailsService;

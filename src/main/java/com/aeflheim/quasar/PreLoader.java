@@ -1,37 +1,33 @@
 package com.aeflheim.quasar;
 
 import java.util.List;
-import java.util.UUID;
 
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 
 import com.aeflheim.quasar.model.Client;
 import com.aeflheim.quasar.model.User;
-import com.aeflheim.quasar.repository.ClientRepository;
 import com.aeflheim.quasar.repository.UserRepository;
 import com.aeflheim.quasar.service.QsClientService;
 
-import jakarta.annotation.PostConstruct;
 
-@Component
-public class DefaultLoader {
+public class PreLoader implements CommandLineRunner {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final QsClientService clientService;
 
 
-    public DefaultLoader(UserRepository userRepository, PasswordEncoder passwordEncoder,
+    public PreLoader(UserRepository userRepository, PasswordEncoder passwordEncoder,
             QsClientService clientService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.clientService = clientService;
     }
 
+    @Override
+    public void run(String... args) throws Exception {
 
-    @PostConstruct
-    public void load() {
         User anna = new User();
         anna.setUsername("anna");
         anna.setPassword(passwordEncoder.encode("sandstorm"));
@@ -53,6 +49,6 @@ public class DefaultLoader {
         client.setGrantType("authorization_code");
         
         clientService.save(Client.from(client));
-
+        
     }
 }

@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
@@ -26,15 +26,21 @@ import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 
 @Configuration
-public class ServerConfig {
+public class WebServerConfiguration {
 
     // http://localhost:9000/oauth2/authorize?response_type=code&client_id=client&scope=openid&redirect_uri=https://springone.io/authorized&code_challenge=QYPAZ5NU8yvtlQ9erXrUYR-T5AGCjCF47vN-KsaI2A8&code_challenge_method=S256
 
     // http://localhost:8080/oauth2/token?client_id=client&redirect_uri=https://springone.io/authorized&grant_type=authorization_code&code=eP19yl20g0U9Ui8hWqnHn4E8BItV1Vv2N01s-TQ4j7C-ubSMgqbKTJ3viNN4nksHsO1QuSc0iLlwoH44YMFak2i0rg3oScLZ0U_eO2sG93QOulh5mQc9kR7_NG3CzICL&code_verifier=qPsH306-ZDDaOE8DFzVn05TkN3ZZoVmI_6x4LsVglQI
 
+    /**
+     * Authorization server filter chain configurations
+     * @param http HttpSecurity parameter
+     * @return SecurityFilterChain
+     * @throws Exception
+     */
     @Bean
     @Order(1)
-    public SecurityFilterChain asSecurityFilterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain asSecurityFilterChain(HttpSecurity http) throws Exception {
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
 
         http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
@@ -49,28 +55,28 @@ public class ServerConfig {
 
     @Bean
     @Order(2)
-    public SecurityFilterChain appSecurityFilterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain appSecurityFilterChain(HttpSecurity http) throws Exception {
 
-        http.formLogin()
-                .and()
-                .authorizeHttpRequests().anyRequest().authenticated();
+        http.formLogin(Customizer.withDefaults())
+                .authorizeHttpRequests()
+                    .anyRequest().authenticated();
 
         return http.build();
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
+    PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public AuthorizationServerSettings authorizationServerSettings() {
+    AuthorizationServerSettings authorizationServerSettings() {
         return AuthorizationServerSettings.builder()
                 .build();
     }
 
     @Bean
-    public JWKSource<SecurityContext> jwkSource() throws Exception {
+    JWKSource<SecurityContext> jwkSource() throws Exception {
         KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
         generator.initialize(2048);
         KeyPair keyPair = generator.generateKeyPair();
