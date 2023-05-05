@@ -9,11 +9,11 @@ import com.aeflheim.quasar.service.QsUserDetailsService;
 
 @RestController
 @RequestMapping("/accounts")
-public class UserController {
+public class AuthenticationController {
 
     private QsUserDetailsService userDetailsService;
 
-    public UserController(QsUserDetailsService userDetailsService) {
+    public AuthenticationController(QsUserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
 

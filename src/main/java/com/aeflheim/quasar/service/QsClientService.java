@@ -22,7 +22,6 @@ public class QsClientService implements RegisteredClientRepository {
     @Override
     public void save(RegisteredClient registeredClient) {
         clientRepository.save(Client.from(registeredClient));
-
     }
 
     @Override
