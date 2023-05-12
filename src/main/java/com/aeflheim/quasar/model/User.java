@@ -1,5 +1,8 @@
 package com.aeflheim.quasar.model;
 
+import java.util.List;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,16 +15,30 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer id;
+    private Integer id;
 
-    protected String username;
-    protected String password;
-    protected String authority;
+    @Column(unique = true, nullable = false)
+    private String username;
 
-    public User() {}
+    @Column(unique = true, nullable = false)
+    private String email;
 
-    public User(String username, String password, String authority) {
+    private String password;
+
+    private List<String> authority;
+
+    public User() {
+    }
+
+    public User(String username, String email, String password) {
         this.username = username;
+        this.email = email;
+        this.password = password;
+    }
+
+    public User(String username, String email, String password, List<String> authority) {
+        this.username = username;
+        this.email = email;
         this.password = password;
         this.authority = authority;
     }
@@ -46,15 +63,20 @@ public class User {
         this.password = password;
     }
 
-    public String getAuthority() {
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public List<String> getAuthority() {
         return authority;
     }
 
-    public void setAuthority(String authority) {
+    public void setAuthority(List<String> authority) {
         this.authority = authority;
     }
 
-    
-
-    
 }

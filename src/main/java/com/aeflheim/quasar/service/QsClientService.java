@@ -29,6 +29,7 @@ public class QsClientService implements RegisteredClientRepository {
     public RegisteredClient findById(String id) {
         var client = clientRepository.findById(Integer.valueOf(id))
                 .orElseThrow();
+
         return Client.from(client);
     }
 

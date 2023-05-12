@@ -1,24 +1,29 @@
-package com.aeflheim.quasar.config;
+package com.aeflheim.quasar.service.userdetails;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.aeflheim.quasar.model.User;
 
-public class QsUserDetails implements UserDetails {
+public class SecureUser implements UserDetails{
+	
+	private User user;
 
-    private final User user;
+	public SecureUser (User user) {
+		this.user = user;
+	}
 
-    public QsUserDetails(User user) {
-        this.user = user;
-    }
-
-    @Override
+	@Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(() -> user.getAuthority());
+        var authorities = user.getAuthority().stream()
+			.map(SimpleGrantedAuthority::new)
+			.collect(Collectors.toList());
+
+		return authorities;
     }
 
     @Override
@@ -50,5 +55,4 @@ public class QsUserDetails implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
 }
