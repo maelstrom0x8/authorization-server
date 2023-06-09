@@ -4,9 +4,9 @@ services:
 
   db:
     image: aeros-pg:latest
-    restart: always
+    restart: unless-stopped
     ports:
-      - "5432:5432"
+      - "54322:5432"
     environment:
       POSTGRES_USERNAME: maelstrom
       POSTGRES_PASSWORD: aeflheim

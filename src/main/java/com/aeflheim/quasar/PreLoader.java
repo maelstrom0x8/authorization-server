@@ -3,6 +3,7 @@ package com.aeflheim.quasar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.aeflheim.quasar.model.Client;
@@ -14,6 +15,9 @@ public class PreLoader implements CommandLineRunner {
 
     @Autowired
     QsClientService clientService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private QsUserDetailsService userDetailsService;
@@ -32,8 +36,8 @@ public class PreLoader implements CommandLineRunner {
         userDetailsService.createUser("bob", "bobby@quasar.org", "12345");
 
         Client client = new Client();
-        client.setClientId("client");
-        client.setClientSecret("secret");
+        client.setClientId("quasar");
+        client.setClientSecret(passwordEncoder.encode("aeros"));
         client.setRedirectUri("http://localhost:3000/authorized");
         client.setScope("openid");
         client.setAuthenticationMethod("client_secret_basic");
