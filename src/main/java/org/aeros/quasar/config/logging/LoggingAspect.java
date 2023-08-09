@@ -17,7 +17,7 @@ public class LoggingAspect {
     @Pointcut("@annotation(org.aeros.quasar.config.annotations.Loggable)")
     public void loggingPointcut() {}
 
-    @Around("loggingPointCut()")
+    @Around("loggingPointcut()")
     public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
         if (LOG.isDebugEnabled()) {
             LOG.debug(

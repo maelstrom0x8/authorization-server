@@ -11,16 +11,10 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class WebServerConfiguration {
 
-    private final CorsCustomizer corsCustomizer;
-
-    public WebServerConfiguration(CorsCustomizer corsCustomizer) {
-        this.corsCustomizer = corsCustomizer;
-    }
 
     @Bean
   @Order(2)
   SecurityFilterChain appSecurityFilterChain(HttpSecurity http) throws Exception {
-      corsCustomizer.customize(http);
     http.formLogin(c -> c.failureForwardUrl("/login"))
         .authorizeHttpRequests(auth -> {
           auth.requestMatchers("/actuator/**").permitAll();
@@ -34,7 +28,5 @@ public class WebServerConfiguration {
   PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
   }
-
-
 
 }
