@@ -1,0 +1,54 @@
+version: 2.1
+
+orbs:
+  docker: circleci/docker@2.2.0
+  sdkman: joshdholtz/sdkman@0.2.0
+
+jobs:
+  test:
+    machine:
+      image: ubuntu-2004:current
+    steps:
+      - checkout
+      - sdkman/setup-sdkman
+      - sdkman/sdkman-install:
+          candidate: java
+          version: 17.0.8-graalce
+      - run:
+          name: "mvn test"
+          command: "./mvnw test"
+  build_image:
+    machine:
+      image: ubuntu-2004:current
+    steps:
+      - checkout
+      - sdkman/setup-sdkman
+      - sdkman/sdkman-install:
+          candidate: java
+          version: 17.0.8-graalce
+      - run:
+          name: "spring-boot:build-image"
+          command: "./mvnw -Pnative spring-boot:build-image -DskipTests"
+      - docker/check:
+          docker-username: DOCKER_LOGIN
+          docker-password: DOCKER_PASSWORD
+      - docker/push:
+          image: maelstrom0x8/order
+          tag: $CIRCLE_TAG-x86_64
+
+
+workflows:
+  tests:
+      jobs:
+        - test
+  build-native-image:
+    jobs:
+      - build_image:
+          context:
+            - aeros-ctx
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
+
