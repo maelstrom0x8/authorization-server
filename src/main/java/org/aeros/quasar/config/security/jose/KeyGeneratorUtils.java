@@ -1,19 +1,19 @@
 package org.aeros.quasar.config.security.jose;
 
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
 import java.math.BigInteger;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
+import java.security.SecureRandom;
 import java.security.spec.ECFieldFp;
 import java.security.spec.ECParameterSpec;
 import java.security.spec.ECPoint;
 import java.security.spec.EllipticCurve;
-
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
+import java.util.Base64;
 
 
-
-final class KeyGeneratorUtils {
+public final class KeyGeneratorUtils {
 
     private KeyGeneratorUtils() {
     }
@@ -65,5 +65,13 @@ final class KeyGeneratorUtils {
             throw new IllegalStateException(ex);
         }
         return keyPair;
+    }
+
+    public static String generateSecret(int length) {
+        SecureRandom secureRandom = new SecureRandom();
+        byte[] bytes = new byte[length];
+        secureRandom.nextBytes(bytes);
+
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
     }
 }
