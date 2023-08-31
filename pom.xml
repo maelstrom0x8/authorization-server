@@ -10,8 +10,8 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>org.aeros</groupId>
-	<artifactId>authorization-server</artifactId>
-	<version>0.</version>
+	<artifactId>quasar</artifactId>
+	<version>0</version>
 	<name>quasar</name>
 	<description>Authorization Server for Aeros</description>
 	<properties>

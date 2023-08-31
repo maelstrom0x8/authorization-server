@@ -1,15 +1,14 @@
 package org.aeros.quasar.web.controller;
 
-import org.aeros.quasar.core.domain.dto.UserDto;
-import org.aeros.quasar.core.service.UserService;
+import org.aeros.quasar.config.security.service.UserService;
 import org.aeros.quasar.core.domain.dto.NewPasswordDto;
 import org.aeros.quasar.core.domain.dto.RegisterDto;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("/v1/users")
+@RequestMapping("/api/v1/users")
+@RestController
 public class UserController {
 
     private final UserService userService;
@@ -19,17 +18,13 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserDto> register(@RequestParam RegisterDto registerDto) {
-        return ResponseEntity.of(userService.createUser(registerDto));
+    public ResponseEntity<String> register(@RequestBody RegisterDto user) {
+        String email = userService.createUser(user.username(), user.email(), user.password());
+        return new ResponseEntity<>(email, HttpStatus.CREATED);
     }
 
     @PostMapping("/change-password")
-    public void changePassword(@RequestParam NewPasswordDto newPasswordDto) {
-        userService.changePassword(newPasswordDto);
-    }
-
-    @PostMapping("/forgot-password")
-    public void forgotPassword(@RequestParam String email) {
-        userService.forgotPassword(email);
+    public void changePassword(@RequestParam NewPasswordDto request) {
+        userService.updatePassword(request.oldPassword(), request.newPassword());
     }
 }

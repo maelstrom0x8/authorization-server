@@ -14,7 +14,8 @@ import java.util.Optional;
 
 @Service
 @Transactional
-public class DefaultUserDetailsService implements QsUserDetailsService {
+public class UserServiceImpl implements UserService {
+
 	@Autowired
 	private UserRepository userRepository;
 
@@ -30,11 +31,11 @@ public class DefaultUserDetailsService implements QsUserDetailsService {
 	}
 
 	@Override
-	public void createUser(String username, String email, String password) {
+	public String createUser(String username, String email, String password) {
 		User user = new User(username, email, passwordEncoder.encode(password));
 		user.setAuthority(Arrays.asList("read", "write", "delete"));
 
-		userRepository.save(user);
+		return userRepository.save(user).getEmail();
 	}
 
 	@Override
@@ -49,5 +50,15 @@ public class DefaultUserDetailsService implements QsUserDetailsService {
 	public void deleteUser(String username) {
 		userRepository.deleteByUsername(username);
 	}
+
+	@Override
+	public void updatePassword(String oldPassword, String newPassword) {
+		userRepository.updatePassword(user(), oldPassword, newPassword);
+	}
+
+	private String user() {
+		return null;
+	}
+
 
 }

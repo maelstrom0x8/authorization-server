@@ -1,20 +1,15 @@
 spring:
   datasource:
-    url: jdbc:postgresql://127.0.0.1:${POSTGRES_PORT}/${POSTGRES_DB}
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DATABASE:postgres}
     driver-class-name: org.postgresql.Driver
-    username: ${POSTGRES_USERNAME}
-    password: ${POSTGRES_PASSWORD}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
   jpa:
     show-sql: true
+    generate-ddl: true
     properties:
       hibernate:
-          dialect: org.hibernate.dialect.PostgreSQLDialect
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 server:
     port: 9000
-
-logging:
-    level:
-        root: INFO
-        org.springframework.web: INFO
-        org.springframework.security: INFO
-        org.springframework.security.oauth2: INFO
+    shutdown: GRACEFUL

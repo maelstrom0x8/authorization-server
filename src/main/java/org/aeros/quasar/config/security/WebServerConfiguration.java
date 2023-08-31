@@ -11,22 +11,29 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class WebServerConfiguration {
 
+    private final String[] ALLOWED_ENDPOINTS = {
+            "/api/v1/users/register",
+            "/api/v1/clients/register",
+            "/actuator/**"
+    };
+
 
     @Bean
-  @Order(2)
-  SecurityFilterChain appSecurityFilterChain(HttpSecurity http) throws Exception {
-    http.formLogin(c -> c.failureForwardUrl("/login"))
-        .authorizeHttpRequests(auth -> {
-          auth.requestMatchers("/actuator/**").permitAll();
-          auth.anyRequest().authenticated();
-        });
+    @Order(0)
+    SecurityFilterChain appSecurityFilterChain(HttpSecurity http) throws Exception {
+        http.csrf(c -> c.ignoringRequestMatchers(ALLOWED_ENDPOINTS));
+        http.formLogin(c -> c.failureForwardUrl("/login"))
+                .authorizeHttpRequests(auth -> {
+                    auth.requestMatchers(ALLOWED_ENDPOINTS).permitAll();
+                    auth.anyRequest().authenticated();
+                });
 
-    return http.build();
-  }
+        return http.build();
+    }
 
-  @Bean
-  PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
-  }
+    @Bean
+    PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
 }
