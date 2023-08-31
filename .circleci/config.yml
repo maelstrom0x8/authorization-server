@@ -33,14 +33,14 @@ jobs:
           docker-username: DOCKER_LOGIN
           docker-password: DOCKER_PASSWORD
       - docker/push:
-          image: maelstrom0x8/order
+          image: maelstrom0x8/quasar
           tag: $CIRCLE_TAG-x86_64
 
 
 workflows:
   tests:
-      jobs:
-        - test
+    jobs:
+      - test
   build-native-image:
     jobs:
       - build_image:
