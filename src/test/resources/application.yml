@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: bifrost
+  flyway:
+    enabled: true
+    url: jdbc:tc:postgresql:15://localhost/db?user=user&password=user
+    password: user
+    user: user
+  datasource:
+    url: jdbc:tc:postgresql:15://localhost/db?user=user&password=user
+    username: user
+    password: user
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
+
+logging:
+  level:
+    com:
+      zaxxer: WARN
+    org:
+      hibernate: WARN
+      testcontainers: OFF
+      springframework: WARN
+      apache: WARN
+    tc: OFF

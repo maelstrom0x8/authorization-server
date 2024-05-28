@@ -46,4 +46,6 @@ buildNumber.properties
 # Eclipse m2e generated files
 # Eclipse Core
 # JDT-specific (Eclipse Java Development Tools)
-setup-env.sh
+env.sh
+*-compose.yml
+build.sh
